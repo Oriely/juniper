@@ -1,0 +1,176 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('../fonts/PressStart2P-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+header {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header-logo {
+    display:flex;
+    align-items: center;
+    padding:5px;
+    user-select: none;
+    text-transform: uppercase;
+    color:white;
+}
+
+.header-logo img {
+    width:50px;
+    height:50px;
+}
+.header-logo span {
+    padding:10px;
+    font-size:2em
+}
+
+nav {
+
+    padding:10px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin:0;
+    padding:0;
+}
+
+nav ul li {
+    display:inline-block;
+    margin:0;
+    padding:0;
+}
+
+nav ul li a {
+    display:block;
+    background:rgb(0, 0, 0);
+    padding:10px;
+    transition:all .2s ease-in-out;
+    margin:0;
+}
+
+
+nav ul li a:hover {
+    background:rgb(69, 69, 69);
+    transition: .4 ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding:0;
+}
+
+
+body {
+    background-color: #030411;
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-size: cover;
+    height:100%;
+}
+
+a {
+    color:white;
+    text-decoration:none;
+}
+
+.container {
+    display:flex;
+    flex-direction: row;
+    color:white;
+    padding:10px;
+}
+.wrapper{
+    display:flex;
+    
+}
+
+
+.columns {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:10px;
+}   
+
+.columns > a{
+    display:block;
+    
+}
+
+.column {
+    display:flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.751);
+    font-size:.6em;
+    align-items: center;
+    width:100px;
+    height:100px;
+    transition:all .2s ease-in-out;
+    padding-top:10px;
+    justify-content: center;
+}
+
+
+.column:hover {
+    background:rgba(255, 255, 255, 0.164);
+}
+
+.column img {
+    width:40px;
+    height:40px;
+    padding:3px;
+    transition: all .3s ease;
+}
+
+.column:hover img {
+    padding:0px;
+}
+
+
+.column h4 {
+    font-weight:normal;
+    font-size:1.25em;
+}
+
+
+.splitter {
+    border-top:1px solid white;
+    border-bottom:1px solid white;
+    margin:3px 0 3px 0;
+}
+
+.description {
+    transition: max-height 0.2s ease-out;
+    overflow:hidden;
+    max-height:0;
+    
+}
+
+#add-website-form {
+
+}
+
+.site {
+    display:flex;
+    color:white;
+
+}
+
+.site > div {
+    padding:10px;
+    width:200px;;
+}
+
+input {
+    padding:5px;
+}
+button {
+    padding:5px;
+}

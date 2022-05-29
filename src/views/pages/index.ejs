@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %> 
+</head>
+<body>
+    <%- include('../partials/navigation') %> 
+
+    <div class="container">
+        <div class="wrapper">
+            <div class="columns">
+                <% if (sites.length != 0) { %> 
+                    <% sites.forEach(function (site) { %>
+                    <%- include('../components/sitelistitem', {site: site}) %>
+                    <% }); %>
+                <% } else { %>
+                    <h1>Did not find any sites...</h1>
+               <% } %>
+
+            </div>
+        </div>
+    </div>
+    <script src="js/primary.js"></script>
+</body>
+</html>

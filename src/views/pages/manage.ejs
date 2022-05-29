@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %> 
+</head>
+<body>
+    <%- include('../partials/navigation') %> 
+
+    <div class="sites">
+        <div class="site" >
+            <div class="site-name">Site Name</div>
+            <div class="site-description">Site subtitle</div>
+            <div class="site-url">Site URL</div>
+            <div class="site-logo-url">Logo URL</div>
+        </div>
+        <% sites.forEach(function (site) { %>
+            <div class="site" data-siteid="<%= site.id %>">
+                <div class="site-name"><%= site.name %></div>
+                <div class="site-description"><%= site.description %></div>
+                <div class="site-url"><%= site.url %></div>
+                <div class="site-logo-url"><%= site.logo_url %></div>
+                <button class="editBtn">EDIT</button>
+                <button class="removeBtn">REMOVE</button>
+            </div>
+        <% }); %>
+    </div>
+    <form id="add-website-form" enctype="multipart/form-data">
+        <input name="site_name" id="site-name" type="text" placeholder="Sonarr">
+        <input name="site_description" id="site-description" type="text" placeholder="TV Series">
+        <input name="site_url" id="site-url" type="text" placeholder="/sonarr">
+
+        <input name="site_logo_url" id="site-logo-url" type="text" placeholder="testing.png">
+        <button id="add-website-button" type="submit">Add site</button>
+    </form>
+    <script>
+
+        function editSite(event) {
+            const siteId = event.target.parentElement.dataset.siteid;
+
+
+        }
+
+        function removeSite(event) {
+            const siteId = event.target.parentElement.dataset.siteid;
+
+            
+            console.log('/manage/remove/' + siteId)
+            fetch('/manage/remove/' + siteId, {
+                method: 'POST',
+                body: siteId,
+            })
+
+            event.target.parentElement.remove();
+       
+        }
+
+        function addSite(event) {
+            event.preventDefault();
+            const addSiteForm = document.getElementById('add-website-form');
+
+            const formData = new FormData(addSiteForm);
+
+
+            fetch('/manage/add', {
+                method: 'POST',
+                body: formData
+
+            })
+        }
+
+        const remvoeBtns = document.querySelectorAll('.removeBtn');
+        const addSiteForm = document.getElementById('add-website-form');
+        addSiteForm.addEventListener('submit', addSite)
+        remvoeBtns.forEach((btn) => {
+            btn.addEventListener('click', removeSite)
+        })
+    </script>
+
+</body>
+</html>

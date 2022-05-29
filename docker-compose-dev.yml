@@ -1,0 +1,17 @@
+version: "3"
+services:
+  juniper_dev:
+    container_name: juniper_dev
+    restart: always 
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./
+    environment:
+      - WEB_PORT=3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./data:/data
+    

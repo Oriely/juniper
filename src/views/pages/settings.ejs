@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %> 
+</head>
+<body>
+    <%- include('../partials/navigation') %> 
+
+    <div class="container">
+        <div>
+            <div><img id="test"></div>
+            <form>
+                <input accept="image/*" id="upload_logo" type="file" name="" id="">
+            </form>
+        </div>
+    </div>
+    <script src="js/primary.js"></script>
+    <script>
+        const uploadLogo = document.getElementById('upload_logo')
+        const preview = document.getElementById('test')
+        
+        uploadLogo.onchange = e => {
+            console.log('test')
+            const [file] = uploadLogo.files
+            console.log(file)
+            if(file) {
+                preview.src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+</body>
+</html>
