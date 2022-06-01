@@ -11,3 +11,10 @@ CREATE TABLE `sites` (
 	`description` TEXT(500),
 	`logo_url` INT(20)
 );
+
+CREATE TABLE `config` (
+	`url` VARCHAR(255),
+	`name` VARCHAR(255),
+	`description` TEXT(500),
+	`logo_url` INT(20)
+);

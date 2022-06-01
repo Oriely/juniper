@@ -12,4 +12,4 @@ RUN npm install
 
 COPY --chown=node:node ./src .
 
-CMD ["nodemon","--legacy-watch", "index.js"]
+CMD ["nodemon","--legacy-watch", "--ext", "*", "--watch", "./", "index.js"]

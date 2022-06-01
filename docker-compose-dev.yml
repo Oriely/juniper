@@ -14,4 +14,4 @@ services:
       - ./src:/usr/src/app
       - /usr/src/app/node_modules
       - ./data:/data
-    
+      - ./logs:/root/.npm/_logs/

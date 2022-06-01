@@ -2,92 +2,101 @@ require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
-const { Setup } = require('./setup')
-const setup = new Setup({
-    databaseDir: '/data/database',
-    logsDir: '/data/logs',
-    pathToSQL: path.join(__dirname, '/database/db.sql')
-});
-
 const bodyParser = require('body-parser');
-
-setup.start();
-
-const db = require('./database/db');
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const config = require('./config');
-const multer = require('multer')
-const upload =  multer();
- 
 
-const app = express();
-app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(express.urlencoded({extended: true}))
-app.use(express.json())
-app.use(bodyParser.json())
 
-app.get('/', function(req, res) {
-    db.all('SELECT * FROM sites;', (err, rows) => {
-        console.log(rows);
-        res.render('pages/index', {sites: rows});
-    }) 
+class Juniper {
+    constructor({databaseDir, logsDir, pathToSQL, config, express}) {
+        this.databaseDir = databaseDir;
+        this.logsDir = logsDir;
+        this.pathToSQL = pathToSQL;
+        this.app = express;
+        this.config = config
+        this.db = null;
+    }
+    directories() {
+        if(!fs.existsSync('/data/database')) {
+            console.log('Did not find database folder. Creating...');
+            fs.mkdirSync('/data/database', { recursive: true});
+        } 
+        if(!fs.existsSync('/data/logs')) {
+            console.log('Did not find logs folder. Creating...');
+            fs.mkdirSync('/data/logs', { recursive: true });
+        } 
+    }
 
-});
+    async database() {
 
-app.get('/manage', function(req, res) {
-    db.all('SELECT * FROM sites;', (err, rows) => {
-        console.log(rows);
-        res.render('pages/manage', {sites: rows});
+        const databaseFileLocation = `${this.databaseDir}/juniper.db`;
+
+        if(!fs.existsSync(databaseFileLocation)) {
+            const db = new sqlite3.Database(path.resolve(databaseFileLocation), function (err) {
+                if(err) throw new Error('err')
+                console.log('Created database in ' + databaseFileLocation);
+            });
+            
+            const sql = fs.readFileSync(this.pathToSQL);
+
+            console.log(sql.toString());
+
+            db.exec(sql.toString());
+
+            this.db = db;
+        } else {
+
+            const db = new sqlite3.Database(path.resolve('/data/database/juniper.db'), sqlite3.OPEN_READWRITE, (err) => {
+                if(err) return console.log(err);
+                console.log(`Found existing database at ${databaseFileLocation}`);
+                console.log('Connected to database');
+            });
+            
+            this.db = db;
+        }
+    }
+
+    init() {
+
+        this.directories();
+        this.database();
+
+        this.app.set('db', this.db);
+        
+        const mainRoute = require('./routes/main')
+        const manageRoute = require('./routes/manage')
+        const settingsRoute = require('./routes/settings');
+
+        
+        this.app.set('view engine', 'ejs');
+        this.app.use(express.static(path.join(__dirname, 'public')))
+        this.app.use(express.urlencoded({extended: true}))
+        this.app.use(express.json())
+        this.app.use(bodyParser.json())
+        this.app.use('/', mainRoute);
+        this.app.use('/manage', manageRoute);
+        this.app.use('/settings', settingsRoute);
+
+        this.app.listen(config.port);
+        console.log(`Server is listening on port ${config.port}`);
+    }
+}
+
+(async() => {
+        
+
+    const juniper = new Juniper({
+        databaseDir: '/data/database',
+        logsDir: '/data/logs',
+        pathToSQL: path.join(__dirname, '/database/db.sql'),
+        config: config,
+        express: express()
     });
-});
 
-app.get('/settings', function(req, res) {
-    res.render('pages/settings');
-});
 
-app.post('/manage/add', upload.none() ,function(req, res) {
-    const form  = req.body;
-    console.log(form)
+    juniper.init();
     
-    const sql = `INSERT INTO sites (url, name, description, logo_url) 
-                 VALUES ('${form.site_url}', '${form.site_name}', '${form.site_description}', '${form.site_logo_url}')`
-    db.serialize(() => {
-        db.exec(sql, (err)  => {
-            if(err) return re
-        });
-    })
-    res.sendStatus(200);
-});
 
-app.post('/manage/edit', upload.none() ,function(req, res) {
-    const form  = req.body;
-    
-    const sql = `UPDATE sites 
-                 SET url = '${form.site_url}', 
-                     name = ${form.name},
-                     description = '${form.site_description}',
-                     logo_url = '${form.site_logo_url}'
-                 WHERE id = ${form.id}
-                 `
-    db.serialize(() => {
-        db.exec(sql);
-    })
-    res.sendStatus(200);
-});
-app.post('/manage/remove/:id', upload.none() ,function(req, res) {
-    const siteId = req.params.id;
-    
-    const sql = `DELETE FROM sites
-                 WHERE id = ${siteId}`;
-                 
-    db.serialize(() => {
-        db.exec(sql);
-    })
-    res.sendStatus(200);
-});
 
-app.listen(config.port);
-
-console.log(`Server is listening on port ${config.port}`);
+})();

@@ -1,26 +1,29 @@
-let columns = document.querySelectorAll('.column');
-let descriptions = document.querySelectorAll('.description');
+let site_descriptions = document.querySelectorAll('.site-link-inner');
+let nav_items = document.querySelectorAll('.nav-item');
 
-const data =  {
-    mouseX: 0,
-    mouseY: 0
-}
-
-window.addEventListener('mousemove', (e) => {
-    data.mouseX = e.clientX;
-    data.mouseY = e.clientY;
-})
 
 if(window.innerWidth > 760)  {
     
-    columns.forEach(function (column){
-        column.addEventListener('mouseover', function (event) {
-            column.lastElementChild.lastElementChild.style.maxHeight = column.lastElementChild.scrollHeight + "px";
+    site_descriptions.forEach(function (elem){
+        elem.addEventListener('mouseover', function (event) {
+            elem.lastElementChild.style.maxHeight = elem.lastElementChild.scrollHeight + "px";
 
         }, false);
 
-        column.addEventListener('mouseleave', function (event) {
-            column.lastElementChild.lastElementChild.style.maxHeight = null;
+        elem.addEventListener('mouseleave', function (event) {
+            elem.lastElementChild.style.maxHeight = 0;
         }, false);
     });
+
+    // nav_items.forEach(function (elem){
+    //     elem.addEventListener('mouseover', function (event) {
+    //         elem.lastElementChild.lastElementChild.style.maxWidth = "100%";
+    //     }, false);
+
+    //     elem.addEventListener('mouseleave', function (event) {
+    //         elem.lastElementChild.lastElementChild.style.maxWidth = 0;
+    //     }, false);
+    // });
 }
+
+const sites = [];

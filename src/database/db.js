@@ -8,4 +8,6 @@ const db = new sqlite3.Database(path.resolve('/data/database/juniper.db'), sqlit
 });
 
 
+
+
 module.exports = db;

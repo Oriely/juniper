@@ -1,12 +1,9 @@
-<a href="<%= site.url %>" target="_blank">
-    <div class="column applink">
-        <img src="images/<%= site.name.toLowerCase() %>.png">
-        <div class="column-inner">
-            <h4><%= site.name %></h4>
-            <div class="description">
-                <%= site.description %>
-            </div>
-        </div>
-        
+<a class="site-link" href="<%= site.url %>" target="_blank">
+    <div class="site-link-inner">
+        <img class="site-link-logo" src="images/apps/<%= site.name.toLowerCase() %>.png">
+        <span class="site-link-name"><%= site.name %></span>
+        <p class="site-link-description">
+            <%= site.description %>
+        </p>
     </div>
 </a>

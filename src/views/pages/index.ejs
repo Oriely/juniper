@@ -6,20 +6,18 @@
 <body>
     <%- include('../partials/navigation') %> 
 
-    <div class="container">
-        <div class="wrapper">
-            <div class="columns">
-                <% if (sites.length != 0) { %> 
-                    <% sites.forEach(function (site) { %>
-                    <%- include('../components/sitelistitem', {site: site}) %>
-                    <% }); %>
-                <% } else { %>
-                    <h1>Did not find any sites...</h1>
-               <% } %>
+    <div class="container ">
+        <div class="site-links">
+            <% if (sites.length != 0) { %> 
+                <% sites.forEach(function (site) { %>
+                <%- include('../components/sitelistitem', {site: site}) %>
+                <% }); %>
+            <% } else { %>
+                <h1>Did not find any sites...</h1>
+            <% } %>
 
-            </div>
         </div>
     </div>
-    <script src="js/primary.js"></script>
+    <%- include('../partials/scripts') %> 
 </body>
 </html>
