@@ -6,10 +6,14 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node ./package*.json ./
 
+RUN npm install
+
 RUN npm install -g nodemon
 
-RUN npm install
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+WORKDIR /usr/src/app/src
 
 COPY --chown=node:node ./src .
 
-CMD ["nodemon","--legacy-watch", "--ext", "*", "--watch", "./", "index.js"]
+CMD ["nodemon","--legacy-watch","--ext", "*", "--watch", "./", "index.js", "--ignore", "./uploads"]
