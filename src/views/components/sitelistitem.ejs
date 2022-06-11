@@ -1,9 +1,9 @@
 <a class="site-link" href="<%= site.url %>" target="_blank">
     <div class="site-link-inner">
-        <img class="site-link-logo" src="images/apps/<%= site.name.toLowerCase() %>.png">
-        <span class="site-link-name"><%= site.name %></span>
+        <img class="site-link-logo" src="<%= site.logo  ? `uploads/logos/${site.logo}` : `images/logo.png` %>">
+        <span class="site-link-name"><%= site.name || '???' %></span>
         <p class="site-link-description">
-            <%= site.description %>
+            <%= site.description || '???'  %>
         </p>
     </div>
 </a>

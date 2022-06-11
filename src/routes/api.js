@@ -8,12 +8,14 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         const { id } = req.body;
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.originalname);
+        if(file.mimetype === 'image/png')  cb(null, `${uniqueSuffix}.png`); 
+        if(file.mimetype === 'image/jpg')  cb(null, `${uniqueSuffix}.jpg`); 
+        if(file.mimetype === 'image/jpeg')  cb(null, `${uniqueSuffix}.jpeg`); 
     },
   
   })
   
-const upload = multer({ 
+const multerUpload = multer({ 
     storage: storage,
     fileFilter: function (req, file, cb) {
         if(file.mimetype.startsWith('image')) {
@@ -44,36 +46,69 @@ router.get('/sites/:id', function(req, res) {
     })
 });
 
-router.post('/sites/new'  ,function(req, res) {
-    const form  = req.body;
-    const logo = req.file;
-    console.log(logo)
-    if(logo) {
-        console.log('Got image upload request.')
-        upload(req, res, function(err) {
+function validateSite(req, res, next) {
+    
+    console.log('Validate site middleware');
 
-            if (err instanceof multer.MulterError) {
-                console.log(err)
-                res.status(500).send({
-                    error: err.message
-                })
-            } else if(err) {
-                console.log(err)
-                res.status(500).send({
-                    error: err
-                })
-            } 
-            console.log('Successfully uploaded image.')
-        });
-    }
-    const sql = `INSERT INTO sites (url, name, description, logo) 
-                 VALUES ('${form.site_url}', '${form.site_name}', '${form.site_description}', 'test')`
-    req.app.get('db').serialize(() => {
-        req.app.get('db').exec(sql, (err)  => {
-            return console.log(err);
-        });
+    const form = req.body;
+    const errors = []; 
+
+    if(!form.site_name) errors.push({
+        type: 'error',
+        message: 'Missing site name.'
     })
-    res.sendStatus(200);
+    if(!form.site_description) errors.push({
+        type: 'error',
+        message: 'Missing site description.'
+    })
+    if(!form.site_url) errors.push({
+        type: 'error',
+        message: 'Missing site url.'
+    })
+
+    if(errors.length > 0) {
+        console.log(errors)
+        return res.status(400).send(errors)
+    }
+    next();
+}
+
+function upload(req, res, next) {
+    multerUpload(req, res, function(err) {
+        if (err instanceof multer.MulterError) {
+            console.log(err)
+            return res.status(500).send({
+                error: err.message
+            })
+        } else if(err) {
+            console.log(err)
+            return res.status(500).send({
+                error: err
+            })
+        }
+        
+        next()
+    });
+}
+
+router.post('/sites/new', upload, validateSite ,function(req, res, next) {
+    const form = req.body;
+
+    const logoFileName = req.file ? req.file.filename : null;
+
+    console.log(            form.site_url, 
+        form.site_name, 
+        form.site_description, 
+        logoFileName || 'Test')
+
+    const sql =  `INSERT INTO sites (url, name, description, logo) 
+                  VALUES (?, ?, ?, ?)`
+
+    req.app.get('db').run(sql, [form.site_url, form.site_name, form.site_description, logoFileName], (err)  => {
+        if(err) return res.status(500).send('Something went wrong while getting data from database');
+ 
+        res.status(200).send('Successfully added new site.');
+    });
 });
 
 router.put('/sites/:id' ,function(req, res) {
@@ -104,12 +139,13 @@ router.delete('/sites/:id' ,function(req, res) {
     const siteId = req.params.id;
     
     const sql = `DELETE FROM sites
-                 WHERE id = ${siteId}`;
-                 
-    req.app.get('db').serialize(() => {
-        req.app.get('db').exec(sql);
-    })
-    res.sendStatus(200);
+                 WHERE id = ?`;
+
+    req.app.get('db').run(sql, [siteId], (err) => {
+        if(err) return res.status('500').send('Something went wrong.')
+        console.log('[DELETE] Deleting site with id ', siteId)
+        res.sendStatus(200);
+    });
 });
 
 module.exports = router;

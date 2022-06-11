@@ -16,4 +16,4 @@ WORKDIR /usr/src/app/src
 
 COPY --chown=node:node ./src .
 
-CMD ["nodemon","--legacy-watch","--ext", "*", "--watch", "./", "index.js", "--ignore", "./uploads"]
+CMD ["nodemon","--legacy-watch","--ext", "*", "--watch", "./", "index.js", "--ignore", "./uploads", "--ignore", "./public"]

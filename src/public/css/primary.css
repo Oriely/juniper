@@ -35,9 +35,22 @@ input[type=text] {
     box-sizing: border-box;
 }
 
+
 button {
-    border: none;
+    padding: 10px 20px;;
+    background:none;
+    color:white;
+    border:1px solid white;
+    font-size:20px;
+    font-family: 'Quicksand', sans-serif;
+    
+    transition: .2s ease-in-out
 }
+
+button:hover {
+    background: rgba(255, 255, 255, 0.263);
+}
+
 
 a {
     color: white;
@@ -273,6 +286,10 @@ nav ul li a:hover {
     border:0;
 }
 
+#add-website-form > div {
+    padding:10px 0; 
+}
+
 #add-website-form input[type="file"] {
     display: none;
 }
@@ -297,8 +314,19 @@ input {
     padding: 5px;
 }
 
-button {
-    padding: 5px;
+.error-container {
+    background: red;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px;
+}
+
+.error-remove {
+    padding:0;
+    height:30px;
+    width:30px;
+    border:none;
 }
 
 
